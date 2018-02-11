@@ -1,4 +1,4 @@
-package vod.clearcrane.com.myapplication
+package com.yexin.ftd
 
 import android.telecom.Call
 import retrofit2.http.GET
@@ -11,5 +11,7 @@ import retrofit2.http.Path
 
 interface IIMSService{
     @GET("users/{user}/repos")
-    fun listRepos(@Path("user") user: String): Call<List<Repo>>
+    fun listRepos(@Path("user") user: String): Call
+
+
 }
