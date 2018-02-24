@@ -1,10 +1,14 @@
 package com.yexin.ftd.api;
 
 
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.yexin.ftd.ktApplication;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -42,22 +46,21 @@ public class Api {
     /**
      * 拦截器  给所有的请求添加消息头
      */
-    private static Interceptor mInterceptor = new Interceptor() {
-        @Override
-        public okhttp3.Response intercept(Chain chain) throws IOException {
-            Request request = chain.request()
-                    .newBuilder()
-                    .addHeader(HEADER_X_HB_Client_Type, FROM_ANDROID)
-                    .build();
-            return chain.proceed(request);
-        }
-    };
+    private static Interceptor mInterceptor ;
 
     public static ApiService getService() {
         if (service == null) {
             service = getRetrofit().create(ApiService.class);
         }
         return service;
+    }
+
+
+    public static Interceptor getInterceptor(){
+        Map<String, String> headers = new HashMap<>();
+        headers.put(HEADER_X_HB_Client_Type,FROM_ANDROID);
+        mInterceptor = new BaseInterceptor(headers);
+        return mInterceptor;
     }
 
     private static Retrofit getRetrofit() {
@@ -69,10 +72,13 @@ public class Api {
             File cacheFile = new File(ktApplication.Companion.getInstance().getCacheDir(), "cache");
             Cache cache = new Cache(cacheFile, 1024 * 1024 * 50); //50Mb
 
+
+
             OkHttpClient client = new OkHttpClient.Builder()
                     .connectTimeout(15, TimeUnit.SECONDS)
+                    .cookieJar(new NovateCookieManger(null))
                     .addInterceptor(interceptor)
-                    .addInterceptor(mInterceptor)
+                    .addInterceptor(getInterceptor())
                     .cache(cache)
                     .build();
 

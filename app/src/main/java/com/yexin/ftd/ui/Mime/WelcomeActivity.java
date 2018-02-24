@@ -21,7 +21,6 @@ import com.yexin.ftd.utils.ToastUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Subscription;
 
 ;
 

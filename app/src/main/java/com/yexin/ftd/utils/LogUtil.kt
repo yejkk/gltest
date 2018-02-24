@@ -78,7 +78,7 @@ object LogUtil {
 
         var log = ""
         if (ex == null) {
-            if (args != null && args.size > 0) {
+            if (args.size > 0) {
                 for (obj in args) {
                     log += obj.toString()
                 }
